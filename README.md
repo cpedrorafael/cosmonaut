@@ -1,1 +1,2 @@
-# cosmonaut
+# Cosmonaut
+A flutter news app.
