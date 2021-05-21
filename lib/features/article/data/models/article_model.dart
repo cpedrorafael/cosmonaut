@@ -7,6 +7,15 @@ class ArticleModel {
   bool featured;
 
   ArticleModel();
+  ArticleModel.fromProps(
+    this.title,
+    this.url,
+    this.imageUrl,
+    this.newsSite,
+    this.summary,
+    this.publishedAt,
+    this.updatedAt,
+  );
 
   factory ArticleModel.fromJson(Map<String, dynamic> json) =>
       _$ArticleModelFromJson(json);
