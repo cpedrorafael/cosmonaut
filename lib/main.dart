@@ -1,3 +1,8 @@
+import 'package:cosmonaut/features/article/presentation/bloc/article_bloc.dart';
+import 'package:cosmonaut/features/article/presentation/pages/feed_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'features/article/presentation/bloc/article_event.dart';
 import 'service_locator.dart';
 import 'package:flutter/material.dart';
 
@@ -10,12 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: FeedPage(),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -43,6 +45,6 @@ Future setupServiceLocator() async {
 
   //3rd party libs
   locator.registerLazySingleton(() => FlutterSecureStorage());
-  locator.registerLazySingleton(() => http.Client);
+  locator.registerLazySingleton(() => http.Client());
   locator.registerLazySingleton(() => DataConnectionChecker());
 }
