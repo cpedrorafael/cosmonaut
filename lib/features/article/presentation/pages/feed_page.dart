@@ -22,6 +22,7 @@ class _FeedPageState extends State<FeedPage> {
         title: Text("Feed"),
       ),
       body: _getBody(context),
+      bottomNavigationBar: CosmoBottomNavigation(),
     );
   }
 
@@ -64,8 +65,8 @@ class _FeedPageState extends State<FeedPage> {
   Widget _getListView(List<Article> articles) {
     return ListView(
       children: articles
-          .map((e) => ListTile(
-                title: Text(e.title),
+          .map((e) => HeadlineWidget(
+                article: e,
               ))
           .toList(),
     );
