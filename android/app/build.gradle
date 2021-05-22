@@ -37,9 +37,9 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.cosmonaut"
-        minSdkVersion 16
+        
+        applicationId "com.guayaba.cosmonaut"
+        minSdkVersion 18
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -47,8 +47,8 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            
+            
             signingConfig signingConfigs.debug
         }
     }
