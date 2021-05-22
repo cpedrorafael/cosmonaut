@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:cosmonaut/core/error/exceptions.dart';
-import 'package:cosmonaut/features/article/data/models/article_cache.dart';
-import 'package:cosmonaut/features/article/data/models/article_model.dart';
+import '../../../../core/error/exceptions.dart';
+import '../models/article_cache.dart';
+import '../models/article_model.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

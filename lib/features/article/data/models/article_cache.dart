@@ -1,5 +1,7 @@
-import 'package:cosmonaut/features/article/data/models/article_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'article_model.dart';
+
 part 'article_cache.g.dart';
 
 @JsonSerializable()

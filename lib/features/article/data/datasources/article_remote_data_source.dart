@@ -1,13 +1,14 @@
 import 'dart:convert';
 
-import 'package:cosmonaut/core/error/exceptions.dart';
-import 'package:cosmonaut/core/network/endpoints.dart';
-import 'package:cosmonaut/features/article/data/models/article_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../core/error/exceptions.dart';
+import '../../../../core/network/endpoints.dart';
+import '../models/article_model.dart';
+
 abstract class ArticleRemoteDataSource {
-  Future<List<ArticleModel>> getArticles();
+  Future<List<ArticleModel>> getArticles(int page);
   Future<List<ArticleModel>> searchArticles();
 }
 
@@ -16,8 +17,8 @@ class ArticleRemoteDataSourceImpl extends ArticleRemoteDataSource {
 
   ArticleRemoteDataSourceImpl({@required this.client});
   @override
-  Future<List<ArticleModel>> getArticles() async {
-    return await _getArticlesFromUrl(articlesURL);
+  Future<List<ArticleModel>> getArticles(int page) async {
+    return await _getArticlesFromUrl(articlesURL, page);
   }
 
   @override
@@ -26,9 +27,11 @@ class ArticleRemoteDataSourceImpl extends ArticleRemoteDataSource {
     throw ServerException();
   }
 
-  Future<List<ArticleModel>> _getArticlesFromUrl(String url) async {
+  Future<List<ArticleModel>> _getArticlesFromUrl(String url, int page) async {
+    var queryString = "$url?_limit=10&_start=$page";
+
     final response = await client.get(
-      url,
+      queryString,
       headers: {
         'Content-Type': 'application/json',
       },
