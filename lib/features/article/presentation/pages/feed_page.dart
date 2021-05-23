@@ -1,5 +1,6 @@
 import 'package:cosmonaut/features/article/domain/entities/article.dart';
 import 'package:cosmonaut/features/article/presentation/bloc/bloc.dart';
+import 'package:cosmonaut/features/article/presentation/pages/article_page.dart';
 import 'package:cosmonaut/features/article/presentation/widgets/widgets.dart';
 import 'package:cosmonaut/service_locator.dart';
 import 'package:flutter/material.dart';
@@ -68,13 +69,24 @@ class _FeedPageState extends State<FeedPage> {
   Widget _getListView(List<Article> articles) {
     return ListView(
       children: articles
-          .map((e) => HeadlineWidget(
-                article: e,
-                onToggleFavorite: _toggleFavorite,
+          .map((e) => InkWell(
+                onTap: () => openArticle(e),
+                child: HeadlineWidget(
+                  article: e,
+                  onToggleFavorite: _toggleFavorite,
+                ),
               ))
           .toList(),
     );
   }
 
   Future _toggleFavorite(Article article) {}
+
+  openArticle(Article e) => Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ArticlePage(
+                article: e,
+                toggleFavorite: _toggleFavorite,
+              )));
 }
