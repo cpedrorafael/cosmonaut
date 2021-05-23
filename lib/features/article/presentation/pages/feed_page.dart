@@ -21,6 +21,8 @@ class _FeedPageState extends State<FeedPage> {
       appBar: CosmoAppBar(
         title: 'Feed',
         context: context,
+        subtitle: 'News Feed',
+        hasSubtitle: true,
       ),
       body: _getBody(context),
       bottomNavigationBar: CosmoBottomNavigation(),
