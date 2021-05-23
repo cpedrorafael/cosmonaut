@@ -19,7 +19,8 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CosmoAppBar(
-        title: Text("Feed"),
+        title: 'Feed',
+        context: context,
       ),
       body: _getBody(context),
       bottomNavigationBar: CosmoBottomNavigation(),
@@ -67,8 +68,11 @@ class _FeedPageState extends State<FeedPage> {
       children: articles
           .map((e) => HeadlineWidget(
                 article: e,
+                onToggleFavorite: _toggleFavorite,
               ))
           .toList(),
     );
   }
+
+  Future _toggleFavorite(Article article) {}
 }

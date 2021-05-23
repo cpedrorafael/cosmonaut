@@ -1,15 +1,29 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cosmonaut/core/ui/colors.dart';
 import 'package:cosmonaut/features/article/domain/entities/article.dart';
 import 'package:cosmonaut/features/article/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/extensions/string_extensions.dart';
 
-class HeadlineWidget extends StatelessWidget {
+class HeadlineWidget extends StatefulWidget {
   final Article article;
   final Function onToggleFavorite;
 
   const HeadlineWidget({Key key, this.article, this.onToggleFavorite})
       : super(key: key);
+
+  @override
+  _HeadlineWidgetState createState() => _HeadlineWidgetState();
+}
+
+class _HeadlineWidgetState extends State<HeadlineWidget> {
+  Article _article;
+  @override
+  void initState() {
+    super.initState();
+    _article = widget.article;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,7 +40,7 @@ class HeadlineWidget extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 child: CachedNetworkImage(
-                  imageUrl: article.imageUrl,
+                  imageUrl: widget.article.imageUrl,
                   fit: BoxFit.fitHeight,
                   placeholder: (c, s) {
                     return Center(child: LoadingWidget());
@@ -47,9 +61,8 @@ class HeadlineWidget extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(article.title),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        Text(widget.article.title),
+                        Stack(
                           children: [
                             Row(
                               children: [
@@ -60,13 +73,23 @@ class HeadlineWidget extends StatelessWidget {
                                 SizedBox(
                                   width: 8,
                                 ),
-                                Text(article.publishedAt
+                                Text(widget.article.publishedAt
                                     .getFormattedDateString()),
                               ],
                             ),
-                            IconButton(
-                                icon: Icon(Icons.favorite_border_outlined),
-                                onPressed: onToggleFavorite),
+                            Center(
+                              child: InkWell(
+                                child: Icon(
+                                  widget.article.isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border_outlined,
+                                  color: widget.article.isFavorite
+                                      ? color_indigo
+                                      : Colors.grey,
+                                ),
+                                onTap: toggleFavorite,
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -79,5 +102,12 @@ class HeadlineWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void toggleFavorite() {
+    setState(() {
+      _article.isFavorite = !_article.isFavorite;
+    });
+    widget.onToggleFavorite(widget.article);
   }
 }

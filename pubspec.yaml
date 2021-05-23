@@ -21,7 +21,7 @@ dependencies:
   flutter_secure_storage: ^3.3.1+1
   http: ^0.12.0+3
   cached_network_image: ^2.5.0
-  intl: ^0.16.2
+  intl: ^0.16.1
   
 
 
@@ -33,9 +33,25 @@ dev_dependencies:
     sdk: flutter
 
 
-flutter:  
-  uses-material-design: true
-
+flutter:    
+  fonts:
+    - family: IBMPlexSans
+      fonts:
+        - asset: assets/fonts/IBMPlexSans-Bold.ttf
+        - asset: assets/fonts/IBMPlexSans-BoldItalic.ttf
+        - asset: assets/fonts/IBMPlexSans-ExtraLight.ttf
+        - asset: assets/fonts/IBMPlexSans-ExtraLightItalic.ttf
+        - asset: assets/fonts/IBMPlexSans-Italic.ttf
+        - asset: assets/fonts/IBMPlexSans-Light.ttf
+        - asset: assets/fonts/IBMPlexSans-LightItalic.ttf
+        - asset: assets/fonts/IBMPlexSans-Medium.ttf
+        - asset: assets/fonts/IBMPlexSans-MediumItalic.ttf
+        - asset: assets/fonts/IBMPlexSans-Regular.ttf
+        - asset: assets/fonts/IBMPlexSans-SemiBold.ttf
+        - asset: assets/fonts/IBMPlexSans-SemiBoldItalic.ttf
+        - asset: assets/fonts/IBMPlexSans-Thin.ttf
+        - asset: assets/fonts/IBMPlexSans-ThinItalic.ttf
+  uses-material-design: true      
   
   
   
