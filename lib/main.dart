@@ -1,17 +1,27 @@
-import 'package:cosmonaut/features/article/presentation/bloc/article_bloc.dart';
-import 'package:cosmonaut/features/article/presentation/pages/feed_page.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'features/article/presentation/bloc/article_event.dart';
-import 'service_locator.dart';
 import 'package:flutter/material.dart';
+
+import 'features/article/presentation/pages/favorites_page.dart';
+import 'features/article/presentation/pages/feed_page.dart';
+import 'features/article/presentation/widgets/widgets.dart';
+import 'service_locator.dart';
 
 void main() async {
   await setupServiceLocator();
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  int _currentIndex = 0;
+
+  FeedPage _feedPage = FeedPage();
+
+  FavoritesPage _favoritesPage = FavoritesPage();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,8 +30,26 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'IBMPlexSans',
       ),
-      home: FeedPage(),
+      home: Scaffold(
+        body: _getCurrentPage(_currentIndex),
+        bottomNavigationBar: CosmoBottomNavigation(
+          onItemSelected: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+        ),
+      ),
     );
+  }
+
+  Widget _getCurrentPage(int index) {
+    if (index == 0)
+      return _feedPage;
+    else if (index == 1)
+      return _favoritesPage;
+    else
+      return Container();
   }
 }
 

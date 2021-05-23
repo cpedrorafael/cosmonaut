@@ -26,7 +26,6 @@ class _FeedPageState extends State<FeedPage> {
         hasSubtitle: true,
       ),
       body: _getBody(context),
-      bottomNavigationBar: CosmoBottomNavigation(),
     );
   }
 
