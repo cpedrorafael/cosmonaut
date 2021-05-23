@@ -17,7 +17,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
         onSearchPressed: (term) {},
       ),
       body: Center(
-        child: EmptyNews(),
+        child: EmptyFavorites(),
       ),
     );
   }

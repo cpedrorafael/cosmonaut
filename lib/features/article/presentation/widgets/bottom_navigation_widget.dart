@@ -1,10 +1,18 @@
 import 'package:cosmonaut/core/ui/colors.dart';
 import 'package:flutter/material.dart';
 
-class CosmoBottomNavigation extends StatelessWidget {
+class CosmoBottomNavigation extends StatefulWidget {
   final Function onItemSelected;
 
   const CosmoBottomNavigation({Key key, this.onItemSelected}) : super(key: key);
+
+  @override
+  _CosmoBottomNavigationState createState() => _CosmoBottomNavigationState();
+}
+
+class _CosmoBottomNavigationState extends State<CosmoBottomNavigation> {
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +31,13 @@ class CosmoBottomNavigation extends StatelessWidget {
           child: BottomNavigationBar(
             backgroundColor: Colors.white,
             selectedItemColor: Colors.black,
-            onTap: onItemSelected,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+              widget.onItemSelected(index);
+            },
+            currentIndex: _currentIndex,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(

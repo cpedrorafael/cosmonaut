@@ -1,4 +1,7 @@
-export 'empty_widget.dart';
+export 'empty_news_widget.dart';
+export 'empty_search_widget.dart';
+export 'empty_favorites_widget.dart';
+export 'empty_news_widget.dart';
 export 'app_bar_widget.dart';
 export 'loading_widget.dart';
 export 'error_widget.dart';
