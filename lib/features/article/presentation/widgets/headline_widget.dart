@@ -17,6 +17,7 @@ class HeadlineWidget extends StatelessWidget {
       child: Container(
         height: 350,
         child: Card(
+          elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
@@ -28,7 +29,7 @@ class HeadlineWidget extends StatelessWidget {
                   imageUrl: article.imageUrl,
                   fit: BoxFit.fitHeight,
                   placeholder: (c, s) {
-                    return LoadingWidget();
+                    return Center(child: LoadingWidget());
                   },
                 ),
               ),
@@ -48,17 +49,23 @@ class HeadlineWidget extends StatelessWidget {
                       children: [
                         Text(article.title),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Icon(
-                              Icons.calendar_today,
-                              color: Colors.grey,
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.calendar_today,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text(article.publishedAt
+                                    .getFormattedDateString()),
+                              ],
                             ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(article.publishedAt.getFormattedDateString()),
                             IconButton(
-                                icon: Icon(Icons.favorite),
+                                icon: Icon(Icons.favorite_border_outlined),
                                 onPressed: onToggleFavorite),
                           ],
                         ),
