@@ -41,6 +41,7 @@ class _HeadlineWidgetState extends State<HeadlineWidget> {
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 child: CachedNetworkImage(
                   imageUrl: widget.article.imageUrl,
+                  filterQuality: FilterQuality.low,
                   fit: BoxFit.fitHeight,
                   placeholder: (c, s) {
                     return Center(child: LoadingWidget());

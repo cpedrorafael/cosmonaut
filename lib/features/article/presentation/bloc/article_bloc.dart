@@ -25,7 +25,7 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
   @override
   Stream<ArticleState> mapEventToState(ArticleEvent event) async* {
     if (event is GetArticleList) {
-      yield Loading();
+      if (event.page == 0) yield Loading();
 
       final failureOrArticles = await _getArticles(Params(page: event.page));
 
@@ -36,8 +36,9 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
   Stream<ArticleState> _eitherLoadedOrErrorState(
       Either<Failure, List<Article>> failureOrArticles) async* {
     yield failureOrArticles.fold(
-        (failure) => Error(message: _mapFailureToMessage(failure)),
-        (articles) => Loaded(articles: articles));
+      (failure) => Error(message: _mapFailureToMessage(failure)),
+      (articles) => Loaded(articles: articles),
+    );
   }
 
   String _mapFailureToMessage(Failure failure) {

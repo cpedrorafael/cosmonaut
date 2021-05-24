@@ -58,7 +58,6 @@ class _ExpandableBarState extends State<ExpandableBar> {
     return Stack(
       children: [
         AnimatedContainer(
-          // curve: Curves.easeOut,
           duration: Duration(milliseconds: 150),
           height: _topContainerHeight,
           decoration: BoxDecoration(color: color_indigo),

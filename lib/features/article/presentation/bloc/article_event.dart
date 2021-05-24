@@ -9,8 +9,7 @@ abstract class ArticleEvent extends Equatable {
 
 class GetArticleList extends ArticleEvent {
   final int page;
-
-  GetArticleList(this.page);
+  GetArticleList({@required this.page});
 
   @override
   List<Object> get props => [page];

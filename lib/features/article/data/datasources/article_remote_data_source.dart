@@ -28,7 +28,8 @@ class ArticleRemoteDataSourceImpl extends ArticleRemoteDataSource {
   }
 
   Future<List<ArticleModel>> _getArticlesFromUrl(String url, int page) async {
-    var queryString = "$url?_limit=10&_start=$page";
+    var start = page * 10;
+    var queryString = "$url?_limit=10&_start=$start";
 
     final response = await client.get(
       queryString,

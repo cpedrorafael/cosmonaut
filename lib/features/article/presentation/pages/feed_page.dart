@@ -12,9 +12,11 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-  int page = 0;
-
   var bloc = locator<ArticleBloc>();
+  List<Article> _articles = [];
+  ScrollController _controller = ScrollController();
+  int _page = 0;
+  ScrollPosition _scrollPosition;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class _FeedPageState extends State<FeedPage> {
   @override
   void dispose() {
     bloc.close();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -39,44 +42,78 @@ class _FeedPageState extends State<FeedPage> {
   void initState() {
     super.initState();
     _getFeed();
+
+    _controller.addListener(() {
+      _onListEndReached();
+    });
   }
 
   _getFeed() {
-    bloc.add(GetArticleList(page));
+    bloc.add(GetArticleList(page: _page));
   }
 
   Widget _getBody(context) {
-    return BlocProvider<ArticleBloc>(
-      create: (_) => bloc,
-      child: Center(
-        child: BlocBuilder<ArticleBloc, ArticleState>(
-          builder: (context, state) {
-            if (state is Empty)
+    return BlocListener<ArticleBloc, ArticleState>(
+      cubit: bloc,
+      listener: (BuildContext context, state) {
+        if (state is Loaded) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_controller.hasClients) {
+              if (_scrollPosition != null)
+                _controller.jumpTo(_scrollPosition.pixels);
+            }
+          });
+        }
+      },
+      child: BlocProvider<ArticleBloc>(
+        create: (_) => bloc,
+        child: Center(
+          child: BlocBuilder<ArticleBloc, ArticleState>(
+            builder: (context, state) {
+              if (state is Empty)
+                return EmptyNews();
+              else if (state is Loading) {
+                return LoadingWidget();
+              } else if (state is Error)
+                return ErrorView(message: state.message);
+              else if (state is Loaded) return _getListView(state.articles);
               return EmptyNews();
-            else if (state is Loading)
-              return LoadingWidget();
-            else if (state is Error)
-              return ErrorView(message: state.message);
-            else if (state is Loaded) return _getListView(state.articles);
-            return EmptyNews();
-          },
+            },
+          ),
         ),
       ),
     );
   }
 
   Widget _getListView(List<Article> articles) {
-    return ListView(
-      children: articles
-          .map((e) => InkWell(
-                onTap: () => openArticle(e),
-                child: HeadlineWidget(
-                  article: e,
-                  onToggleFavorite: _toggleFavorite,
-                ),
-              ))
-          .toList(),
+    _articles.addAll(articles);
+    _page++;
+
+    return ListView.builder(
+      itemCount: _articles.length,
+      addAutomaticKeepAlives: true,
+      controller: _controller,
+      itemBuilder: (_, index) {
+        return InkWell(
+          onTap: () => openArticle(_articles[index]),
+          child: HeadlineWidget(
+            article: _articles[index],
+            onToggleFavorite: _toggleFavorite,
+          ),
+        );
+      },
     );
+  }
+
+  void _onListEndReached() {
+    if (_controller.offset >= _controller.position.maxScrollExtent * 0.5) {
+      _scrollPosition = _controller.position;
+      bloc.add(GetArticleList(page: _page));
+    }
+    if (_controller.offset == _controller.position.maxScrollExtent) {
+      _scrollPosition = _controller.position;
+      bloc.add(GetArticleList(page: _page));
+    }
   }
 
   Future _toggleFavorite(Article article) {}
