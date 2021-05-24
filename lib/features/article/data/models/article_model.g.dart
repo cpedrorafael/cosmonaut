@@ -8,6 +8,7 @@ part of 'article_model.dart';
 
 ArticleModel _$ArticleModelFromJson(Map<String, dynamic> json) {
   return ArticleModel(
+    id: json['id'] as String,
     title: json['title'] as String,
     url: json['url'] as String,
     imageUrl: json['imageUrl'] as String,
@@ -16,11 +17,12 @@ ArticleModel _$ArticleModelFromJson(Map<String, dynamic> json) {
     publishedAt: json['publishedAt'] as String,
     updatedAt: json['updatedAt'] as String,
     featured: json['featured'] as bool,
-  );
+  )..isFavorite = json['isFavorite'] as bool;
 }
 
 Map<String, dynamic> _$ArticleModelToJson(ArticleModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
       'url': instance.url,
       'imageUrl': instance.imageUrl,
@@ -29,4 +31,5 @@ Map<String, dynamic> _$ArticleModelToJson(ArticleModel instance) =>
       'publishedAt': instance.publishedAt,
       'updatedAt': instance.updatedAt,
       'featured': instance.featured,
+      'isFavorite': instance.isFavorite,
     };

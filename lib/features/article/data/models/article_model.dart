@@ -8,6 +8,7 @@ part 'article_model.g.dart';
 @JsonSerializable()
 class ArticleModel extends Article {
   ArticleModel({
+    @required String id,
     @required String title,
     @required String url,
     @required String imageUrl,
@@ -17,6 +18,7 @@ class ArticleModel extends Article {
     @required String updatedAt,
     @required bool featured,
   }) : super(
+          id: id,
           title: title,
           url: url,
           imageUrl: imageUrl,

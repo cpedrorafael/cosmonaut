@@ -89,27 +89,27 @@ class _FeedPageState extends State<FeedPage> {
     _articles.addAll(articles);
     _page++;
 
-    return ListView.builder(
-      itemCount: _articles.length,
-      addAutomaticKeepAlives: true,
-      controller: _controller,
-      itemBuilder: (_, index) {
-        return InkWell(
-          onTap: () => openArticle(_articles[index]),
-          child: HeadlineWidget(
-            article: _articles[index],
-            onToggleFavorite: _toggleFavorite,
-          ),
-        );
-      },
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+      child: ListView.builder(
+        itemCount: _articles.length,
+        addAutomaticKeepAlives: true,
+        controller: _controller,
+        itemBuilder: (_, index) {
+          return InkWell(
+            onTap: () => openArticle(_articles[index]),
+            child: HeadlineWidget(
+              article: _articles[index],
+              onToggleFavorite: _toggleFavorite,
+            ),
+          );
+        },
+      ),
     );
   }
 
   void _onListEndReached() {
-    if (_controller.offset >= _controller.position.maxScrollExtent * 0.5) {
-      _scrollPosition = _controller.position;
-      bloc.add(GetArticleList(page: _page));
-    }
     if (_controller.offset == _controller.position.maxScrollExtent) {
       _scrollPosition = _controller.position;
       bloc.add(GetArticleList(page: _page));
