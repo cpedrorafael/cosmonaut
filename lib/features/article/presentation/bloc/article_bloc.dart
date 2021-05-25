@@ -1,6 +1,8 @@
+import 'package:cosmonaut/core/usecases/usecase.dart';
 import 'package:cosmonaut/features/article/domain/entities/article.dart';
 import 'package:cosmonaut/core/error/failures.dart';
 import 'package:cosmonaut/features/article/domain/usecases/get_articles.dart';
+import 'package:cosmonaut/features/article/domain/usecases/get_favorites.dart';
 import 'package:cosmonaut/features/article/domain/usecases/save_favorite_article.dart';
 import 'package:cosmonaut/features/article/domain/usecases/search_articles.dart';
 import 'package:cosmonaut/features/article/presentation/bloc/article_event.dart';
@@ -17,17 +19,21 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
   final GetArticles _getArticles;
   final SearchArticles _searchArticles;
   final SaveOrRemoveArticle _saveOrRemove;
+  final GetFavorites _getFavorites;
 
   ArticleBloc({
     @required GetArticles getArticles,
     @required SearchArticles searchArticles,
     @required SaveOrRemoveArticle saveOrRemove,
+    @required GetFavorites getFavorites,
   })  : assert(getArticles != null),
         assert(searchArticles != null),
         assert(saveOrRemove != null),
+        assert(getFavorites != null),
         _getArticles = getArticles,
         _searchArticles = searchArticles,
         _saveOrRemove = saveOrRemove,
+        _getFavorites = getFavorites,
         super(null);
 
   @override
@@ -48,8 +54,15 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
           await _searchArticles(SearchParams(term: event.term));
 
       yield* _eitherLoadedOrErrorState(failureOrArticles, true);
-    } else if (event is ToggleFavoriteArticle)
+    } else if (event is GetFavoritesList) {
+      yield Loading();
+
+      final failureOrArticles = await _getFavorites(NoParams());
+
+      yield* _eitherLoadedOrErrorState(failureOrArticles);
+    } else if (event is ToggleFavoriteArticle) {
       _saveOrRemove(SaveParams(article: event.article));
+    }
   }
 
   Stream<ArticleState> _eitherLoadedOrErrorState(

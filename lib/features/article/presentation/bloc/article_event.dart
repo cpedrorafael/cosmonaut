@@ -31,3 +31,10 @@ class ToggleFavoriteArticle extends ArticleEvent {
   @override
   List<Object> get props => [article];
 }
+
+class GetFavoritesList extends ArticleEvent {
+  GetFavoritesList();
+
+  @override
+  List<Object> get props => [];
+}

@@ -1,3 +1,4 @@
+import 'package:cosmonaut/core/utils/utils.dart';
 import 'package:cosmonaut/features/article/domain/entities/article.dart';
 import 'package:cosmonaut/features/article/presentation/bloc/bloc.dart';
 import 'package:cosmonaut/features/article/presentation/pages/article_page.dart';
@@ -119,10 +120,10 @@ class _FeedPageState extends State<FeedPage> {
         controller: _controller,
         itemBuilder: (_, index) {
           return InkWell(
-            onTap: () => openArticle(_articles[index]),
+            onTap: () => openArticle(_articles[index], context),
             child: HeadlineWidget(
               article: _articles[index],
-              onToggleFavorite: _toggleFavorite,
+              onToggleFavorite: (article) => toggleFavorite(article, bloc),
             ),
           );
         },
@@ -137,15 +138,4 @@ class _FeedPageState extends State<FeedPage> {
       bloc.add(GetArticleList(page: _page));
     }
   }
-
-  _toggleFavorite(Article article) =>
-      bloc.add(ToggleFavoriteArticle(article: article));
-
-  openArticle(Article e) => Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => ArticlePage(
-                article: e,
-                toggleFavorite: _toggleFavorite,
-              )));
 }

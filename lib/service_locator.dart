@@ -1,3 +1,4 @@
+import 'package:cosmonaut/features/article/domain/usecases/get_favorites.dart';
 import 'package:cosmonaut/features/article/domain/usecases/save_favorite_article.dart';
 import 'package:cosmonaut/features/article/domain/usecases/search_articles.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
@@ -23,12 +24,14 @@ Future setupServiceLocator() async {
         getArticles: locator(),
         searchArticles: locator(),
         saveOrRemove: locator(),
+        getFavorites: locator(),
       ));
 
   //Use cases
   locator.registerLazySingleton(() => GetArticles(locator()));
   locator.registerLazySingleton(() => SearchArticles(locator()));
   locator.registerLazySingleton(() => SaveOrRemoveArticle(locator()));
+  locator.registerLazySingleton(() => GetFavorites(locator()));
 
   //Repository
   locator.registerLazySingleton<ArticleRepository>(() => ArticleRepositoryImpl(
