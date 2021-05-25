@@ -28,20 +28,23 @@ class _FeedPageState extends State<FeedPage> {
         subtitle: 'News Feed',
         hasSubtitle: true,
         onSearchPressed: (term) {
+          if (term.length == 0) return _resetFeed();
           if (term.length < 3) return;
           _isSearching = true;
           _articles.clear();
           bloc.add(GetSearchResultList(term: term));
         },
-        onSearchClosed: () {
-          _isSearching = false;
-          _articles.clear();
-          _page = 0;
-          bloc.add(GetArticleList(page: _page));
-        },
+        onSearchClosed: _resetFeed,
       ),
       body: _getBody(context),
     );
+  }
+
+  void _resetFeed() {
+    _isSearching = false;
+    _articles.clear();
+    _page = 0;
+    bloc.add(GetArticleList(page: _page));
   }
 
   @override
@@ -89,7 +92,12 @@ class _FeedPageState extends State<FeedPage> {
                 return LoadingWidget();
               } else if (state is Error)
                 return ErrorView(message: state.message);
-              else if (state is Loaded) return _getListView(state.articles);
+              else if (state is Loaded)
+                return _getListView(state.articles);
+              else if (state is SearchResultLoaded) {
+                if (state.articles.length == 0) return EmptySearch();
+                return _getListView(state.articles);
+              }
               return EmptyNews();
             },
           ),

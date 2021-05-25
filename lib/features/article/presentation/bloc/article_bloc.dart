@@ -42,15 +42,18 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
       final failureOrArticles =
           await _searchArticles(SearchParams(term: event.term));
 
-      yield* _eitherLoadedOrErrorState(failureOrArticles);
+      yield* _eitherLoadedOrErrorState(failureOrArticles, true);
     }
   }
 
   Stream<ArticleState> _eitherLoadedOrErrorState(
-      Either<Failure, List<Article>> failureOrArticles) async* {
+      Either<Failure, List<Article>> failureOrArticles,
+      [bool isSearch = false]) async* {
     yield failureOrArticles.fold(
       (failure) => Error(message: _mapFailureToMessage(failure)),
-      (articles) => Loaded(articles: articles),
+      (articles) => isSearch
+          ? SearchResultLoaded(articles: articles)
+          : Loaded(articles: articles),
     );
   }
 
