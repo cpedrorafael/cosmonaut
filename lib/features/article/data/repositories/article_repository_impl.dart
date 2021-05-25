@@ -34,9 +34,16 @@ class ArticleRepositoryImpl extends ArticleRepository {
   }
 
   @override
-  Future<Either<Failure, List<Article>>> searchArticles(String term) {
-    // TODO: implement searchArticles
-    throw UnimplementedError();
+  Future<Either<Failure, List<Article>>> searchArticles(String term) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteArticles = await remoteDataSource.searchArticles(term);
+        return Right(remoteArticles);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else
+      return Left(NetworkFailure());
   }
 
   @override
