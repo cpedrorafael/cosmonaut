@@ -17,6 +17,7 @@ class _FeedPageState extends State<FeedPage> {
   ScrollController _controller = ScrollController();
   int _page = 0;
   ScrollPosition _scrollPosition;
+  bool _isSearching = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,18 @@ class _FeedPageState extends State<FeedPage> {
         context: context,
         subtitle: 'News Feed',
         hasSubtitle: true,
+        onSearchPressed: (term) {
+          if (term.length < 3) return;
+          _isSearching = true;
+          _articles.clear();
+          bloc.add(GetSearchResultList(term: term));
+        },
+        onSearchClosed: () {
+          _isSearching = false;
+          _articles.clear();
+          _page = 0;
+          bloc.add(GetArticleList(page: _page));
+        },
       ),
       body: _getBody(context),
     );
@@ -110,7 +123,8 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   void _onListEndReached() {
-    if (_controller.offset == _controller.position.maxScrollExtent) {
+    if (_controller.offset == _controller.position.maxScrollExtent &&
+        !_isSearching) {
       _scrollPosition = _controller.position;
       bloc.add(GetArticleList(page: _page));
     }

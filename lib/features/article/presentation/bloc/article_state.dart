@@ -21,6 +21,15 @@ class Loaded extends ArticleState {
   List<Object> get props => [articles];
 }
 
+class SearchResultLoaded extends ArticleState {
+  final List<Article> articles;
+
+  SearchResultLoaded({@required this.articles});
+
+  @override
+  List<Object> get props => [articles];
+}
+
 class Error extends ArticleState {
   final String message;
 

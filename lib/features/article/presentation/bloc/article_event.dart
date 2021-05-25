@@ -14,3 +14,11 @@ class GetArticleList extends ArticleEvent {
   @override
   List<Object> get props => [page];
 }
+
+class GetSearchResultList extends ArticleEvent {
+  final String term;
+  GetSearchResultList({@required this.term});
+
+  @override
+  List<Object> get props => [term];
+}

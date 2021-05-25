@@ -1,3 +1,4 @@
+import 'package:cosmonaut/features/article/data/models/article_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
 
@@ -25,6 +26,7 @@ class ArticleRepositoryImpl extends ArticleRepository {
     if (await networkInfo.isConnected) {
       try {
         final remoteArticles = await remoteDataSource.getArticles(page);
+        await _checkForFavorites(remoteArticles);
         return Right(remoteArticles);
       } on ServerException {
         return Left(ServerFailure());
@@ -33,11 +35,18 @@ class ArticleRepositoryImpl extends ArticleRepository {
       return Left(NetworkFailure());
   }
 
+  Future _checkForFavorites(List<ArticleModel> remoteArticles) async {
+    for (var item in remoteArticles) {
+      item.isFavorite = await localDataSource.checkArticleSaved(item.id);
+    }
+  }
+
   @override
   Future<Either<Failure, List<Article>>> searchArticles(String term) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteArticles = await remoteDataSource.searchArticles(term);
+        await _checkForFavorites(remoteArticles);
         return Right(remoteArticles);
       } on ServerException {
         return Left(ServerFailure());

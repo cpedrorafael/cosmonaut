@@ -1,6 +1,7 @@
 import 'package:cosmonaut/features/article/domain/entities/article.dart';
 import 'package:cosmonaut/core/error/failures.dart';
 import 'package:cosmonaut/features/article/domain/usecases/get_articles.dart';
+import 'package:cosmonaut/features/article/domain/usecases/search_articles.dart';
 import 'package:cosmonaut/features/article/presentation/bloc/article_event.dart';
 import 'package:cosmonaut/features/article/presentation/bloc/article_state.dart';
 import 'package:dartz/dartz.dart';
@@ -13,10 +14,15 @@ const String CACHE_FAILURE_MESSAGE = 'There was a problem loading the articles';
 
 class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
   final GetArticles _getArticles;
+  final SearchArticles _searchArticles;
 
-  ArticleBloc({@required GetArticles getArticles})
-      : assert(getArticles != null),
+  ArticleBloc({
+    @required GetArticles getArticles,
+    @required SearchArticles searchArticles,
+  })  : assert(getArticles != null),
+        assert(searchArticles != null),
         _getArticles = getArticles,
+        _searchArticles = searchArticles,
         super(null);
 
   @override
@@ -28,6 +34,13 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
       if (event.page == 0) yield Loading();
 
       final failureOrArticles = await _getArticles(Params(page: event.page));
+
+      yield* _eitherLoadedOrErrorState(failureOrArticles);
+    } else if (event is GetSearchResultList) {
+      yield Loading();
+
+      final failureOrArticles =
+          await _searchArticles(SearchParams(term: event.term));
 
       yield* _eitherLoadedOrErrorState(failureOrArticles);
     }

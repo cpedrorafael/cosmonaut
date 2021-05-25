@@ -1,3 +1,4 @@
+import 'package:cosmonaut/features/article/domain/usecases/search_articles.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -17,10 +18,12 @@ Future setupServiceLocator() async {
   locator.reset();
 
   //Article bloc
-  locator.registerFactory(() => ArticleBloc(getArticles: locator()));
+  locator.registerFactory(
+      () => ArticleBloc(getArticles: locator(), searchArticles: locator()));
 
   //Use cases
   locator.registerLazySingleton(() => GetArticles(locator()));
+  locator.registerLazySingleton(() => SearchArticles(locator()));
 
   //Repository
   locator.registerLazySingleton<ArticleRepository>(() => ArticleRepositoryImpl(

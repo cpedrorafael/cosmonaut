@@ -8,6 +8,7 @@ class CosmoAppBar extends PreferredSize {
   final bool hasSubtitle;
   final Function onSearchPressed;
   final BuildContext context;
+  final Function onSearchClosed;
 
   CosmoAppBar({
     this.title,
@@ -15,11 +16,13 @@ class CosmoAppBar extends PreferredSize {
     this.hasSubtitle,
     this.onSearchPressed,
     this.context,
+    this.onSearchClosed,
   }) : super(
             preferredSize: Size(double.infinity, 160),
             child: ExpandableBar(
               title: title,
               onSearchPressed: onSearchPressed,
+              onSearchClosed: onSearchClosed,
               context: context,
               subtitle: subtitle,
               hasSubtitle: hasSubtitle,
@@ -31,6 +34,7 @@ class ExpandableBar extends StatefulWidget {
   final String subtitle;
   final bool hasSubtitle;
   final Function onSearchPressed;
+  final Function onSearchClosed;
   final BuildContext context;
   const ExpandableBar({
     Key key,
@@ -39,6 +43,7 @@ class ExpandableBar extends StatefulWidget {
     this.hasSubtitle,
     this.onSearchPressed,
     this.context,
+    this.onSearchClosed,
   }) : super(key: key);
 
   @override
@@ -194,10 +199,9 @@ class _ExpandableBarState extends State<ExpandableBar> {
       _searchContainerWidth =
           _isSearching ? MediaQuery.of(context).size.width : 0;
     });
+    if (!_isSearching) widget.onSearchClosed();
     _controller.clear();
   }
 
-  void onSearchPressed(String value) {
-    if (value.length > 2) return onSearchPressed(value);
-  }
+  void onSearchPressed(String value) => widget.onSearchPressed(value);
 }
