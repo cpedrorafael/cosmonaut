@@ -5,7 +5,7 @@ import 'package:cosmonaut/features/article/data/datasources/article_local_data_s
 import 'package:cosmonaut/features/article/data/datasources/article_remote_data_source.dart';
 import 'package:cosmonaut/features/article/data/models/article_model.dart';
 import 'package:cosmonaut/features/article/data/repositories/article_repository_impl.dart';
-import 'package:cosmonaut/features/article/domain/entities/article.dart';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
