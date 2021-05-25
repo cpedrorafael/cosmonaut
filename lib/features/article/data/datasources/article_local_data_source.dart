@@ -39,9 +39,7 @@ class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
       var stored = await storage.read(key: SAVED_ARTICLES);
       Map<String, dynamic> map = jsonDecode(stored);
       cache = ArticleCache.fromJson(map);
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
 
     return cache;
   }
