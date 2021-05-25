@@ -35,7 +35,7 @@ class _HeadlineWidgetState extends State<HeadlineWidget> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
-          child: Stack(children: [
+          child: Stack(fit: StackFit.expand, children: [
             Positioned.fill(
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20)),

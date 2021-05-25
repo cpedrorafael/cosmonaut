@@ -1,3 +1,4 @@
+import 'package:cosmonaut/features/article/domain/entities/article.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -21,4 +22,12 @@ class GetSearchResultList extends ArticleEvent {
 
   @override
   List<Object> get props => [term];
+}
+
+class ToggleFavoriteArticle extends ArticleEvent {
+  final Article article;
+  ToggleFavoriteArticle({@required this.article});
+
+  @override
+  List<Object> get props => [article];
 }

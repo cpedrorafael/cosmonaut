@@ -138,7 +138,8 @@ class _FeedPageState extends State<FeedPage> {
     }
   }
 
-  Future _toggleFavorite(Article article) {}
+  _toggleFavorite(Article article) =>
+      bloc.add(ToggleFavoriteArticle(article: article));
 
   openArticle(Article e) => Navigator.push(
       context,

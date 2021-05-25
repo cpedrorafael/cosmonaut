@@ -6,5 +6,5 @@ abstract class ArticleRepository {
   Future<Either<Failure, List<Article>>> getArticles(int page);
   Future<Either<Failure, List<Article>>> searchArticles(String term);
   Future<Either<Failure, List<Article>>> getSavedArticles();
-  Future<void> saveArticle(Article article);
+  Future<void> saveorDeleteArticle(Article article);
 }

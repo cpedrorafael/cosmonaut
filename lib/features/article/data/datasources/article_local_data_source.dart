@@ -8,7 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class ArticleLocalDataSource {
   Future<List<ArticleModel>> getSavedArticles();
-  Future<void> saveArticle(ArticleModel article);
+  Future<void> saveOrDeleteArticle(ArticleModel article);
   Future<bool> checkArticleSaved(String id);
 }
 
@@ -27,9 +27,13 @@ class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
   }
 
   @override
-  Future<void> saveArticle(ArticleModel article) async {
+  Future<void> saveOrDeleteArticle(ArticleModel article) async {
+    var isSaved = await checkArticleSaved(article.id);
     var cache = await _getCache();
-    cache.articles.add(article);
+    if (isSaved)
+      cache.articles.removeWhere((element) => element.id == article.id);
+    else
+      cache.articles.add(article);
     await _saveCache(cache);
   }
 
@@ -46,8 +50,8 @@ class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
 
   Future<void> _saveCache(ArticleCache cache) async {
     var map = cache.toJson();
-    await storage.write(
-        key: SAVED_ARTICLES, value: json.decode(map.toString()));
+    var json = jsonEncode(map);
+    await storage.write(key: SAVED_ARTICLES, value: json);
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:cosmonaut/features/article/domain/entities/article.dart';
 import 'package:cosmonaut/core/error/failures.dart';
 import 'package:cosmonaut/features/article/domain/usecases/get_articles.dart';
+import 'package:cosmonaut/features/article/domain/usecases/save_favorite_article.dart';
 import 'package:cosmonaut/features/article/domain/usecases/search_articles.dart';
 import 'package:cosmonaut/features/article/presentation/bloc/article_event.dart';
 import 'package:cosmonaut/features/article/presentation/bloc/article_state.dart';
@@ -15,14 +16,18 @@ const String CACHE_FAILURE_MESSAGE = 'There was a problem loading the articles';
 class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
   final GetArticles _getArticles;
   final SearchArticles _searchArticles;
+  final SaveOrRemoveArticle _saveOrRemove;
 
   ArticleBloc({
     @required GetArticles getArticles,
     @required SearchArticles searchArticles,
+    @required SaveOrRemoveArticle saveOrRemove,
   })  : assert(getArticles != null),
         assert(searchArticles != null),
+        assert(saveOrRemove != null),
         _getArticles = getArticles,
         _searchArticles = searchArticles,
+        _saveOrRemove = saveOrRemove,
         super(null);
 
   @override
@@ -43,7 +48,8 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
           await _searchArticles(SearchParams(term: event.term));
 
       yield* _eitherLoadedOrErrorState(failureOrArticles, true);
-    }
+    } else if (event is ToggleFavoriteArticle)
+      _saveOrRemove(SaveParams(article: event.article));
   }
 
   Stream<ArticleState> _eitherLoadedOrErrorState(

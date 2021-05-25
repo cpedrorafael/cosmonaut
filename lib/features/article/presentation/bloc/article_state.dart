@@ -10,8 +10,6 @@ abstract class ArticleState extends Equatable {
 
 class Empty extends ArticleState {}
 
-class NotFound extends ArticleState {}
-
 class Loading extends ArticleState {}
 
 class Loaded extends ArticleState {

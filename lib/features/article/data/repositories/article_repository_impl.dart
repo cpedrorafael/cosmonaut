@@ -66,7 +66,7 @@ class ArticleRepositoryImpl extends ArticleRepository {
   }
 
   @override
-  Future<void> saveArticle(Article article) async {
-    await localDataSource.saveArticle(article);
+  Future<void> saveorDeleteArticle(Article article) async {
+    await localDataSource.saveOrDeleteArticle(article);
   }
 }
