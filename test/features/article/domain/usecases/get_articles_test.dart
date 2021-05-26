@@ -1,7 +1,3 @@
-import 'dart:math';
-
-import 'package:cosmonaut/features/article/domain/entities/article.dart';
-import 'package:cosmonaut/features/article/domain/repositories/article_repository.dart';
 import 'package:cosmonaut/features/article/domain/usecases/get_articles.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';

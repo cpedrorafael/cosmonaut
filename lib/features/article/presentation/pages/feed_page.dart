@@ -33,14 +33,18 @@ class _FeedPageState extends State<FeedPage> {
         onSearchPressed: (term) {
           if (term.length == 0) return _resetFeed();
           if (term.length < 3) return;
-          _isSearching = true;
-          _articles.clear();
-          bloc.add(GetSearchResultList(term: term));
+          _startSearch(term);
         },
         onSearchClosed: _resetFeed,
       ),
       body: _getBody(context),
     );
+  }
+
+  void _startSearch(term) {
+    _isSearching = true;
+    _articles.clear();
+    bloc.add(GetSearchResultList(term: term));
   }
 
   void _resetFeed() {
@@ -75,13 +79,7 @@ class _FeedPageState extends State<FeedPage> {
     return BlocListener<ArticleBloc, ArticleState>(
       cubit: bloc,
       listener: (BuildContext context, state) {
-        if (state is Loaded) {
-          _goToCurrentScrollPosition();
-        }
-        if (state is ToggledFavorite) {
-          bloc.add(GetFavoritesList());
-          _goToCurrentScrollPosition();
-        }
+        if (state is Loaded) _goToCurrentScrollPosition();
       },
       child: BlocProvider<ArticleBloc>(
         create: (_) => bloc,

@@ -13,7 +13,6 @@ abstract class ArticleLocalDataSource {
 }
 
 const SAVED_ARTICLES = 'ARTICLES';
-const TEMPORARY_CACHE = 'TEMP_CACHE';
 
 class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
   final FlutterSecureStorage storage;
@@ -35,7 +34,7 @@ class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
       cache.articles.removeWhere((element) => element.id == article.id);
     else
       cache.articles.add(article);
-    await _saveCache(cache);
+    await _saveFavoritesCache(cache);
   }
 
   Future<ArticleCache> _getSavedCache() async {
@@ -49,7 +48,7 @@ class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
     return cache;
   }
 
-  Future<void> _saveCache(ArticleCache cache) async {
+  Future<void> _saveFavoritesCache(ArticleCache cache) async {
     var map = cache.toJson();
     var json = jsonEncode(map);
     await storage.write(key: SAVED_ARTICLES, value: json);
