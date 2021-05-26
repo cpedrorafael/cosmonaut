@@ -38,3 +38,10 @@ class Error extends ArticleState {
   @override
   List<Object> get props => [message];
 }
+
+class ToggledFavorite extends ArticleState {
+  final Article article;
+  ToggledFavorite({@required this.article});
+  @override
+  List<Object> get props => [article];
+}

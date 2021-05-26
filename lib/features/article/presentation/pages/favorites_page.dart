@@ -1,23 +1,22 @@
 import 'package:cosmonaut/core/utils/utils.dart';
 import 'package:cosmonaut/features/article/domain/entities/article.dart';
-import 'package:cosmonaut/features/article/presentation/bloc/article_bloc.dart';
 import 'package:cosmonaut/features/article/presentation/bloc/article_event.dart';
 import 'package:cosmonaut/features/article/presentation/bloc/bloc.dart';
+import 'package:cosmonaut/features/article/presentation/bloc/favorites_bloc.dart';
 import 'package:cosmonaut/features/article/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../service_locator.dart';
-import 'article_page.dart';
 
 class FavoritesPage extends StatefulWidget {
+  const FavoritesPage({Key key}) : super(key: key);
   @override
   _FavoritesPageState createState() => _FavoritesPageState();
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
-  var bloc = locator<ArticleBloc>();
-  List<Article> _articles = [];
+  var bloc = locator<FavoritesBloc>();
 
   @override
   void initState() {
@@ -40,46 +39,51 @@ class _FavoritesPageState extends State<FavoritesPage> {
   }
 
   Widget _buildBody() {
-    return BlocConsumer(
-      cubit: bloc,
-      builder: (BuildContext context, state) {
-        if (state is Empty)
-          return EmptyNews();
-        else if (state is Loading) {
-          return LoadingWidget();
-        } else if (state is Error)
-          return ErrorView(message: state.message);
-        else if (state is Loaded)
-          return _getListView(state.articles);
-        else if (state is SearchResultLoaded) {
-          if (state.articles.length == 0) return EmptySearch();
-          return _getListView(state.articles);
-        }
-        return EmptyNews();
-      },
-      listener: (BuildContext context, state) {},
+    return Center(
+      child: BlocListener(
+        cubit: bloc,
+        listener: (BuildContext context, state) {
+          if (state is ToggledFavorite) bloc.add(GetFavoritesList());
+        },
+        child: BlocProvider(
+          create: (_) => bloc,
+          child: BlocBuilder<FavoritesBloc, ArticleState>(
+            builder: (context, state) {
+              if (state is Empty)
+                return EmptyFavorites();
+              else if (state is Loading) {
+                return LoadingWidget();
+              } else if (state is Loaded)
+                return _getListView(state.articles);
+              else if (state is SearchResultLoaded) {
+                if (state.articles.length == 0) return EmptySearch();
+                return _getListView(state.articles);
+              }
+              return EmptyFavorites();
+            },
+          ),
+        ),
+      ),
     );
   }
 
   Widget _getListView(List<Article> articles) {
-    _articles.addAll(articles);
-
     return ClipRRect(
-      borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-      child: ListView.builder(
-        itemCount: _articles.length,
-        addAutomaticKeepAlives: true,
-        itemBuilder: (_, index) {
-          return InkWell(
-            onTap: () => openArticle(_articles[index], context),
-            child: HeadlineWidget(
-              article: _articles[index],
-              onToggleFavorite: (article) => toggleFavorite(article, bloc),
-            ),
-          );
-        },
-      ),
-    );
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        child: ListView(
+          children: articles
+              .map(
+                (e) => InkWell(
+                  onTap: () => openArticle(e, context),
+                  child: HeadlineWidget(
+                    article: e,
+                    onToggleFavorite: (article) =>
+                        toggleFavorite(article, bloc),
+                  ),
+                ),
+              )
+              .toList(),
+        ));
   }
 }

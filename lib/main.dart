@@ -18,10 +18,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
 
-  FeedPage _feedPage = FeedPage();
-
-  FavoritesPage _favoritesPage = FavoritesPage();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,7 +27,7 @@ class _MyAppState extends State<MyApp> {
         fontFamily: 'IBMPlexSans',
       ),
       home: Scaffold(
-        body: _getCurrentPage(_currentIndex),
+        body: _getCurrentPage(),
         bottomNavigationBar: CosmoBottomNavigation(
           onItemSelected: (index) {
             setState(() {
@@ -43,13 +39,13 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget _getCurrentPage(int index) {
-    if (index == 0)
-      return _feedPage;
-    else if (index == 1)
-      return _favoritesPage;
+  Widget _getCurrentPage() {
+    if (_currentIndex == 0)
+      return FeedPage(
+        key: GlobalKey(),
+      );
     else
-      return Container();
+      return FavoritesPage();
   }
 }
 

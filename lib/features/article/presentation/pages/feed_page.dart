@@ -1,13 +1,15 @@
-import 'package:cosmonaut/core/utils/utils.dart';
-import 'package:cosmonaut/features/article/domain/entities/article.dart';
-import 'package:cosmonaut/features/article/presentation/bloc/bloc.dart';
-import 'package:cosmonaut/features/article/presentation/pages/article_page.dart';
-import 'package:cosmonaut/features/article/presentation/widgets/widgets.dart';
-import 'package:cosmonaut/service_locator.dart';
+import 'package:cosmonaut/features/article/presentation/bloc/favorites_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/utils/utils.dart';
+import '../../../../service_locator.dart';
+import '../../domain/entities/article.dart';
+import '../bloc/bloc.dart';
+import '../widgets/widgets.dart';
+
 class FeedPage extends StatefulWidget {
+  const FeedPage({Key key}) : super(key: key);
   @override
   _FeedPageState createState() => _FeedPageState();
 }
@@ -74,12 +76,11 @@ class _FeedPageState extends State<FeedPage> {
       cubit: bloc,
       listener: (BuildContext context, state) {
         if (state is Loaded) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (_controller.hasClients) {
-              if (_scrollPosition != null)
-                _controller.jumpTo(_scrollPosition.pixels);
-            }
-          });
+          _goToCurrentScrollPosition();
+        }
+        if (state is ToggledFavorite) {
+          bloc.add(GetFavoritesList());
+          _goToCurrentScrollPosition();
         }
       },
       child: BlocProvider<ArticleBloc>(
@@ -87,9 +88,7 @@ class _FeedPageState extends State<FeedPage> {
         child: Center(
           child: BlocBuilder<ArticleBloc, ArticleState>(
             builder: (context, state) {
-              if (state is Empty)
-                return EmptyNews();
-              else if (state is Loading) {
+              if (state is Loading) {
                 return LoadingWidget();
               } else if (state is Error)
                 return ErrorView(message: state.message);
@@ -105,6 +104,14 @@ class _FeedPageState extends State<FeedPage> {
         ),
       ),
     );
+  }
+
+  void _goToCurrentScrollPosition() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_controller.hasClients) {
+        if (_scrollPosition != null) _controller.jumpTo(_scrollPosition.pixels);
+      }
+    });
   }
 
   Widget _getListView(List<Article> articles) {
@@ -123,7 +130,8 @@ class _FeedPageState extends State<FeedPage> {
             onTap: () => openArticle(_articles[index], context),
             child: HeadlineWidget(
               article: _articles[index],
-              onToggleFavorite: (article) => toggleFavorite(article, bloc),
+              onToggleFavorite: (article) =>
+                  toggleFavorite(article, locator<FavoritesBloc>()),
             ),
           );
         },

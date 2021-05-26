@@ -1,12 +1,11 @@
-import 'package:cosmonaut/features/article/domain/usecases/get_articles.dart';
-
-import '../../../../core/error/failures.dart';
-import '../entities/article.dart';
-import '../repositories/article_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import '../../../../core/usecases/usecase.dart';
 import 'package:meta/meta.dart';
+
+import '../../../../core/error/failures.dart';
+import '../../../../core/usecases/usecase.dart';
+import '../entities/article.dart';
+import '../repositories/article_repository.dart';
 
 class SearchArticles implements UseCase<List<Article>, SearchParams> {
   final ArticleRepository repository;

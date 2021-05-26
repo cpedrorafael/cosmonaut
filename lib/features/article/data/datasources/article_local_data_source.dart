@@ -13,6 +13,7 @@ abstract class ArticleLocalDataSource {
 }
 
 const SAVED_ARTICLES = 'ARTICLES';
+const TEMPORARY_CACHE = 'TEMP_CACHE';
 
 class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
   final FlutterSecureStorage storage;
@@ -21,7 +22,7 @@ class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
 
   @override
   Future<List<ArticleModel>> getSavedArticles() async {
-    var cache = await _getCache();
+    var cache = await _getSavedCache();
     if (cache.articles.isEmpty) throw CacheException();
     return cache.articles;
   }
@@ -29,7 +30,7 @@ class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
   @override
   Future<void> saveOrDeleteArticle(ArticleModel article) async {
     var isSaved = await checkArticleSaved(article.id);
-    var cache = await _getCache();
+    var cache = await _getSavedCache();
     if (isSaved)
       cache.articles.removeWhere((element) => element.id == article.id);
     else
@@ -37,7 +38,7 @@ class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
     await _saveCache(cache);
   }
 
-  Future<ArticleCache> _getCache() async {
+  Future<ArticleCache> _getSavedCache() async {
     ArticleCache cache = ArticleCache.empty();
     try {
       var stored = await storage.read(key: SAVED_ARTICLES);
@@ -56,7 +57,7 @@ class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
 
   @override
   Future<bool> checkArticleSaved(String id) async {
-    var cache = await _getCache();
+    var cache = await _getSavedCache();
     return cache.articles.any((x) => x.id == id);
   }
 }

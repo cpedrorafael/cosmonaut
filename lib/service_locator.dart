@@ -1,6 +1,7 @@
 import 'package:cosmonaut/features/article/domain/usecases/get_favorites.dart';
 import 'package:cosmonaut/features/article/domain/usecases/save_favorite_article.dart';
 import 'package:cosmonaut/features/article/domain/usecases/search_articles.dart';
+import 'package:cosmonaut/features/article/presentation/bloc/favorites_bloc.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -23,6 +24,11 @@ Future setupServiceLocator() async {
   locator.registerFactory(() => ArticleBloc(
         getArticles: locator(),
         searchArticles: locator(),
+        saveOrRemove: locator(),
+      ));
+
+  //Favorites bloc
+  locator.registerFactory(() => FavoritesBloc(
         saveOrRemove: locator(),
         getFavorites: locator(),
       ));

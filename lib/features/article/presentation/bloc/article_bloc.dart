@@ -1,39 +1,33 @@
-import 'package:cosmonaut/core/usecases/usecase.dart';
-import 'package:cosmonaut/features/article/domain/entities/article.dart';
-import 'package:cosmonaut/core/error/failures.dart';
-import 'package:cosmonaut/features/article/domain/usecases/get_articles.dart';
-import 'package:cosmonaut/features/article/domain/usecases/get_favorites.dart';
-import 'package:cosmonaut/features/article/domain/usecases/save_favorite_article.dart';
-import 'package:cosmonaut/features/article/domain/usecases/search_articles.dart';
-import 'package:cosmonaut/features/article/presentation/bloc/article_event.dart';
-import 'package:cosmonaut/features/article/presentation/bloc/article_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../../../../core/error/failures.dart';
+import '../../domain/entities/article.dart';
+import '../../domain/usecases/get_articles.dart';
+import '../../domain/usecases/save_favorite_article.dart';
+import '../../domain/usecases/search_articles.dart';
+import 'article_event.dart';
+import 'article_state.dart';
+
 const String SERVER_FAILURE_MESSAGE = 'There was an error. Please try again.';
 const String NETWORK_FAILURE_MESSAGE = 'No internet connection';
-const String CACHE_FAILURE_MESSAGE = 'There was a problem loading the articles';
 
 class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
   final GetArticles _getArticles;
   final SearchArticles _searchArticles;
   final SaveOrRemoveArticle _saveOrRemove;
-  final GetFavorites _getFavorites;
 
   ArticleBloc({
     @required GetArticles getArticles,
     @required SearchArticles searchArticles,
     @required SaveOrRemoveArticle saveOrRemove,
-    @required GetFavorites getFavorites,
   })  : assert(getArticles != null),
         assert(searchArticles != null),
         assert(saveOrRemove != null),
-        assert(getFavorites != null),
         _getArticles = getArticles,
         _searchArticles = searchArticles,
         _saveOrRemove = saveOrRemove,
-        _getFavorites = getFavorites,
         super(null);
 
   @override
@@ -54,12 +48,6 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
           await _searchArticles(SearchParams(term: event.term));
 
       yield* _eitherLoadedOrErrorState(failureOrArticles, true);
-    } else if (event is GetFavoritesList) {
-      yield Loading();
-
-      final failureOrArticles = await _getFavorites(NoParams());
-
-      yield* _eitherLoadedOrErrorState(failureOrArticles);
     } else if (event is ToggleFavoriteArticle) {
       _saveOrRemove(SaveParams(article: event.article));
     }
@@ -82,8 +70,6 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
         return NETWORK_FAILURE_MESSAGE;
       case ServerFailure:
         return SERVER_FAILURE_MESSAGE;
-      case CacheFailure:
-        return CACHE_FAILURE_MESSAGE;
       default:
         return 'Oops! There was an error.';
     }
