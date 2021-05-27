@@ -1,2 +1,2 @@
 # Cosmonaut
-A flutter news app.
+A flutter based news app.
