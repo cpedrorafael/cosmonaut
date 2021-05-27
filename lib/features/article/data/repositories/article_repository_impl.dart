@@ -69,4 +69,15 @@ class ArticleRepositoryImpl extends ArticleRepository {
   Future<void> saveorDeleteArticle(Article article) async {
     await localDataSource.saveOrDeleteArticle(article);
   }
+
+  @override
+  Future<Either<Failure, List<Article>>> searchSavedArticles(
+      String term) async {
+    try {
+      final savedArticles = await localDataSource.searchSavedArticles(term);
+      return Right(savedArticles);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+  }
 }

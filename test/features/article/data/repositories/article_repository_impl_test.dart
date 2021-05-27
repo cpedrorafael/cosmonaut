@@ -149,10 +149,8 @@ void main() {
 
   group('favorites cache', () {
     test('should get saved articles', () async {
-      Future<List<ArticleModel>> future = Future.value(dummyList);
-
-      when(localDataSource.getSavedArticles()).thenAnswer((_) => future);
-
+      when(localDataSource.getSavedArticles())
+          .thenAnswer((_) async => dummyList);
       var result = await repository.getSavedArticles();
 
       verify(localDataSource.getSavedArticles());
@@ -165,6 +163,26 @@ void main() {
       var result = await repository.getSavedArticles();
 
       verify(localDataSource.getSavedArticles());
+      expect(result, equals(Left(CacheFailure())));
+    });
+
+    test('should get articles when searching', () async {
+      when(localDataSource.searchSavedArticles(any))
+          .thenAnswer((_) async => dummyList);
+
+      var result = await repository.searchSavedArticles('test');
+
+      verify(localDataSource.searchSavedArticles('test'));
+      expect(result, equals(Right(dummyList)));
+    });
+
+    test('should get CacheFailure articles when searching', () async {
+      when(localDataSource.searchSavedArticles(any))
+          .thenThrow(CacheException());
+
+      var result = await repository.searchSavedArticles('test');
+
+      verify(localDataSource.searchSavedArticles('test'));
       expect(result, equals(Left(CacheFailure())));
     });
   });

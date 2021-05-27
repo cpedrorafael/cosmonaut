@@ -1,3 +1,4 @@
+import 'package:cosmonaut/features/article/domain/usecases/search_saved_articles.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
@@ -15,14 +16,18 @@ const String CACHE_FAILURE_MESSAGE = 'There was a problem loading the articles';
 class FavoritesBloc extends Bloc<ArticleEvent, ArticleState> {
   final SaveOrRemoveArticle _saveOrRemove;
   final GetFavorites _getFavorites;
+  final SearchSavedArticles _searchSavedArticles;
 
   FavoritesBloc({
     @required SaveOrRemoveArticle saveOrRemove,
     @required GetFavorites getFavorites,
+    @required SearchSavedArticles searchSavedArticles,
   })  : assert(saveOrRemove != null),
         assert(getFavorites != null),
+        assert(searchSavedArticles != null),
         _saveOrRemove = saveOrRemove,
         _getFavorites = getFavorites,
+        _searchSavedArticles = searchSavedArticles,
         super(null);
 
   @override
@@ -40,6 +45,13 @@ class FavoritesBloc extends Bloc<ArticleEvent, ArticleState> {
       await _saveOrRemove(SaveParams(article: event.article));
 
       yield ToggledFavorite(article: event.article);
+    } else if (event is GetSearchResultList) {
+      yield Loading();
+
+      final failureOrArticles =
+          await _searchSavedArticles(SearchParams(term: event.term));
+
+      yield* _eitherLoadedOrErrorState(failureOrArticles, true);
     }
   }
 

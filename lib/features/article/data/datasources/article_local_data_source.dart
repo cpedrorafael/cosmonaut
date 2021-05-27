@@ -11,6 +11,7 @@ abstract class ArticleLocalDataSource {
   Future<List<ArticleModel>> getSavedArticles();
   Future<void> saveOrDeleteArticle(ArticleModel article);
   Future<bool> checkArticleSaved(String id);
+  Future<List<ArticleModel>> searchSavedArticles(String term);
 }
 
 const SAVED_ARTICLES = 'ARTICLES';
@@ -59,5 +60,19 @@ class ArticleLocalDataSourceImpl extends ArticleLocalDataSource {
   Future<bool> checkArticleSaved(String id) async {
     var cache = await _getSavedCache();
     return cache.articles.any((x) => x.id == id);
+  }
+
+  @override
+  Future<List<ArticleModel>> searchSavedArticles(String term) async {
+    var cache = await _getSavedCache();
+    if (cache.articles.isEmpty) throw CacheException();
+    var searchTerm = term.toLowerCase();
+    var searchResult = cache.articles
+        .where((element) =>
+            element.title.toLowerCase().contains(searchTerm) ||
+            element.summary.toLowerCase().contains(searchTerm))
+        .toList();
+    if (searchResult.isEmpty) throw CacheException();
+    return searchResult;
   }
 }
