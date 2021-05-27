@@ -23,6 +23,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   void initState() {
     super.initState();
+    _resetBloc();
+  }
+
+  void _resetBloc() {
     bloc.add(GetFavoritesList());
   }
 
@@ -34,10 +38,20 @@ class _FavoritesPageState extends State<FavoritesPage> {
         title: 'Favorites',
         hasSubtitle: true,
         subtitle: 'Favorite articles',
-        onSearchPressed: (term) {},
+        onSearchPressed: (term) {
+          if (term.length == 0) return _resetBloc();
+          if (term.length < 3) return;
+          _startSearch(term);
+        },
+        onSearchClosed: _resetBloc,
       ),
       body: _buildBody(),
     );
+  }
+
+  void _startSearch(term) {
+    _articles.clear();
+    bloc.add(GetSearchResultList(term: term));
   }
 
   Widget _buildBody() {
@@ -92,6 +106,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
         MaterialPageRoute(
             builder: (context) => ArticlePage(
                   article: _articles[index],
-                ))).then((value) => bloc.add(GetFavoritesList()));
+                ))).then((value) => _resetBloc());
   }
 }

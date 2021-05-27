@@ -59,7 +59,9 @@ class FavoritesBloc extends Bloc<ArticleEvent, ArticleState> {
       Either<Failure, List<Article>> failureOrArticles,
       [bool isSearch = false]) async* {
     yield failureOrArticles.fold(
-      (failure) => Error(message: CACHE_FAILURE_MESSAGE),
+      (failure) => isSearch
+          ? SearchResultLoaded(articles: [])
+          : Error(message: CACHE_FAILURE_MESSAGE),
       (articles) => isSearch
           ? SearchResultLoaded(articles: articles)
           : Loaded(articles: articles),
