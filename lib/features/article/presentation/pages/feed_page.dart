@@ -16,12 +16,18 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-  var bloc = locator<ArticleBloc>();
-  var favorites_bloc = locator<FavoritesBloc>();
+  var _bloc = locator<ArticleBloc>();
+
+  var _favoritesBloc = locator<FavoritesBloc>();
+
   List<Article> _articles = [];
+
   ScrollController _controller = ScrollController();
+
   int _page = 0;
+
   ScrollPosition _scrollPosition;
+
   bool _isSearching = false;
 
   @override
@@ -46,7 +52,7 @@ class _FeedPageState extends State<FeedPage> {
   void _startSearch(term) {
     _isSearching = true;
     _articles.clear();
-    bloc.add(GetSearchResultList(term: term));
+    _bloc.add(GetSearchResultList(term: term));
   }
 
   void _resetFeed([bool savePosition = false]) {
@@ -54,12 +60,12 @@ class _FeedPageState extends State<FeedPage> {
     _isSearching = false;
     _articles.clear();
     _page = 0;
-    bloc.add(GetArticleList(page: _page));
+    _bloc.add(GetArticleList(page: _page));
   }
 
   @override
   void dispose() {
-    bloc.close();
+    _bloc.close();
     _controller.dispose();
     super.dispose();
   }
@@ -75,17 +81,17 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   _getFeed() {
-    bloc.add(GetArticleList(page: _page));
+    _bloc.add(GetArticleList(page: _page));
   }
 
   Widget _getBody(context) {
     return BlocListener<ArticleBloc, ArticleState>(
-      cubit: bloc,
+      cubit: _bloc,
       listener: (BuildContext context, state) {
         if (state is Loaded) _goToCurrentScrollPosition();
       },
       child: BlocProvider<ArticleBloc>(
-        create: (_) => bloc,
+        create: (_) => _bloc,
         child: Center(
           child: BlocBuilder<ArticleBloc, ArticleState>(
             builder: (context, state) {
@@ -124,18 +130,21 @@ class _FeedPageState extends State<FeedPage> {
         addAutomaticKeepAlives: true,
         controller: _controller,
         itemBuilder: (_, index) {
-          return InkWell(
-            onTap: () => openArticle(
-                article: _articles[index],
-                context: context,
-                onToggleFavorite: (_) => _resetFeed(true)),
-            child: HeadlineWidget(
-              article: _articles[index],
-              onToggleFavorite: (article) =>
-                  toggleFavorite(article, favorites_bloc),
-            ),
-          );
+          return _getListViewItem(index);
         },
+      ),
+    );
+  }
+
+  InkWell _getListViewItem(int index) {
+    return InkWell(
+      onTap: () => openArticle(
+          article: _articles[index],
+          context: context,
+          onToggleFavorite: (_) => _resetFeed(true)),
+      child: HeadlineWidget(
+        article: _articles[index],
+        onToggleFavorite: (article) => toggleFavorite(article, _favoritesBloc),
       ),
     );
   }
@@ -157,7 +166,7 @@ class _FeedPageState extends State<FeedPage> {
     if (_controller.offset == _controller.position.maxScrollExtent &&
         !_isSearching) {
       _saveScrollPosition();
-      bloc.add(GetArticleList(page: _page));
+      _bloc.add(GetArticleList(page: _page));
     }
   }
 

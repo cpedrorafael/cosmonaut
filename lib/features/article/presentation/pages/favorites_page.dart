@@ -17,7 +17,7 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
-  var bloc = locator<FavoritesBloc>();
+  var _bloc = locator<FavoritesBloc>();
   List<Article> _articles = [];
 
   @override
@@ -27,7 +27,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   }
 
   void _resetBloc() {
-    bloc.add(GetFavoritesList());
+    _bloc.add(GetFavoritesList());
   }
 
   @override
@@ -51,18 +51,18 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   void _startSearch(term) {
     _articles.clear();
-    bloc.add(GetSearchResultList(term: term));
+    _bloc.add(GetSearchResultList(term: term));
   }
 
   Widget _buildBody() {
     return Center(
       child: BlocListener(
-        cubit: bloc,
+        cubit: _bloc,
         listener: (BuildContext context, state) {
           if (state is ToggledFavorite) _resetBloc();
         },
         child: BlocProvider(
-          create: (_) => bloc,
+          create: (_) => _bloc,
           child: BlocBuilder<FavoritesBloc, ArticleState>(
             builder: (context, state) {
               if (state is Empty)
@@ -94,7 +94,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
             onTap: () => openArticle(context, index),
             child: HeadlineWidget(
               article: _articles[index],
-              onToggleFavorite: (article) => toggleFavorite(article, bloc),
+              onToggleFavorite: (article) => toggleFavorite(article, _bloc),
             ),
           ),
         ));

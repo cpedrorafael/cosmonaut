@@ -61,131 +61,141 @@ class _ExpandableBarState extends State<ExpandableBar> {
 
   @override
   Widget build(BuildContext context) {
+    return _buildBody(context);
+  }
+
+  Stack _buildBody(BuildContext context) {
     return Stack(
-      children: [
-        AnimatedContainer(
+      children: [_getHead(context), _getBottom(context)],
+    );
+  }
+
+  Align _getBottom(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        child: AnimatedContainer(
           duration: Duration(milliseconds: 150),
-          height: _topContainerHeight,
-          decoration: BoxDecoration(color: color_indigo),
+          curve: Curves.easeInOut,
+          height: _bottomContainerHeight,
+          color: Theme.of(context).canvasColor,
           child: Center(
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: widget.hasSubtitle
+                ? Row(
                     children: [
-                      Text(
-                        widget.title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize:
-                                Theme.of(context).textTheme.headline5.fontSize,
-                            color: Colors.white),
-                      ),
-                      InkWell(
-                        child: Icon(
-                          _isSearching ? Icons.close : Icons.search,
-                          color: Colors.white,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 24),
+                        child: Text(
+                          widget.subtitle,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .fontSize),
                         ),
-                        onTap: search,
                       )
                     ],
+                  )
+                : Container(
+                    height: 0,
+                    width: 0,
                   ),
-                  SizedBox(
-                    height: _isSearching ? 16 : 0,
-                  ),
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    height: _searchContainerHeight,
-                    width: _searchContainerWidth,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 16, left: 16, right: 16),
-                      child: _isSearching
-                          ? TextField(
-                              controller: _controller,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .fontSize,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: 'Search...',
-                                hintStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .fontSize,
-                                ),
-                                filled: true,
-                                fillColor: color_transparent_grey,
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.white,
-                                ),
-                                border: new OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      const Radius.circular(30.0),
-                                    ),
-                                    borderSide: BorderSide.none),
-                              ),
-                              onChanged: onSearchPressed,
-                            )
-                          : Container(
-                              height: 0,
-                              width: 0,
-                            ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 150),
-              curve: Curves.easeInOut,
-              height: _bottomContainerHeight,
-              color: Theme.of(context).canvasColor,
-              child: Center(
-                child: widget.hasSubtitle
-                    ? Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 24),
-                            child: Text(
-                              widget.subtitle,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .fontSize),
-                            ),
-                          )
-                        ],
-                      )
-                    : Container(
-                        height: 0,
-                        width: 0,
-                      ),
-              ),
-            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  AnimatedContainer _getHead(BuildContext context) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 150),
+      height: _topContainerHeight,
+      decoration: BoxDecoration(color: color_indigo),
+      child: Center(
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _getTitleBar(context),
+              SizedBox(
+                height: _isSearching ? 16 : 0,
+              ),
+              _getSearchContainer(context),
+            ],
+          ),
+        ),
+      )),
+    );
+  }
+
+  AnimatedContainer _getSearchContainer(BuildContext context) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      height: _searchContainerHeight,
+      width: _searchContainerWidth,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+        child: _isSearching
+            ? TextField(
+                controller: _controller,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: Theme.of(context).textTheme.bodyText1.fontSize,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Search...',
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: Theme.of(context).textTheme.bodyText1.fontSize,
+                  ),
+                  contentPadding: EdgeInsets.all(0),
+                  filled: true,
+                  fillColor: color_transparent_grey,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                  border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(30.0),
+                      ),
+                      borderSide: BorderSide.none),
+                ),
+                onChanged: onSearchPressed,
+              )
+            : Container(
+                height: 0,
+                width: 0,
+              ),
+      ),
+    );
+  }
+
+  Row _getTitleBar(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          widget.title,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: Theme.of(context).textTheme.headline5.fontSize,
+              color: Colors.white),
+        ),
+        InkWell(
+          child: Icon(
+            _isSearching ? Icons.close : Icons.search,
+            color: Colors.white,
+          ),
+          onTap: search,
         )
       ],
     );
