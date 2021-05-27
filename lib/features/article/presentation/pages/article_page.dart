@@ -1,20 +1,29 @@
-import 'package:cosmonaut/core/ui/colors.dart';
-import 'package:cosmonaut/features/article/domain/entities/article.dart';
-import 'package:cosmonaut/features/article/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
+import '../../../../core/ui/colors.dart';
+import '../../../../core/utils/utils.dart';
+import '../../../../service_locator.dart';
+import '../../domain/entities/article.dart';
+import '../bloc/favorites_bloc.dart';
+import '../widgets/widgets.dart';
+
 class ArticlePage extends StatefulWidget {
   final Article article;
-  final Function toggleFavorite;
+  final Function onToggleFavorite;
 
-  const ArticlePage({Key key, this.article, this.toggleFavorite})
-      : super(key: key);
+  const ArticlePage({
+    Key key,
+    this.article,
+    this.onToggleFavorite,
+  }) : super(key: key);
   @override
   _ArticlePageState createState() => _ArticlePageState();
 }
 
 class _ArticlePageState extends State<ArticlePage> {
+  var favorites_bloc = locator<FavoritesBloc>();
+
   @override
   Widget build(BuildContext context) {
     return WebviewScaffold(
@@ -46,6 +55,8 @@ class _ArticlePageState extends State<ArticlePage> {
     setState(() {
       widget.article.isFavorite = !widget.article.isFavorite;
     });
-    return widget.toggleFavorite(widget.article);
+    toggleFavorite(widget.article, favorites_bloc);
+    if (widget.onToggleFavorite != null)
+      widget.onToggleFavorite(widget.article);
   }
 }

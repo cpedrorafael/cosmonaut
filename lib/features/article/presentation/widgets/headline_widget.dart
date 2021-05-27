@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cosmonaut/core/ui/colors.dart';
-import 'package:cosmonaut/features/article/domain/entities/article.dart';
-import 'package:cosmonaut/features/article/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/extensions/string_extensions.dart';
+import '../../../../core/ui/colors.dart';
+import '../../domain/entities/article.dart';
+import 'widgets.dart';
 
 class HeadlineWidget extends StatefulWidget {
   final Article article;

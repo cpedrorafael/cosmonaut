@@ -1,6 +1,7 @@
-import 'package:cosmonaut/core/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import '../../../../core/ui/colors.dart';
 
 class CosmoAppBar extends PreferredSize {
   final String title;

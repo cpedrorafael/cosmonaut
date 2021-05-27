@@ -1,6 +1,7 @@
-import 'package:cosmonaut/features/article/domain/entities/article.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+
+import '../../domain/entities/article.dart';
 
 @immutable
 abstract class ArticleEvent extends Equatable {

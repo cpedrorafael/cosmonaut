@@ -1,9 +1,9 @@
-export 'empty_news_widget.dart';
-export 'empty_search_widget.dart';
+export 'app_bar_widget.dart';
+export 'bottom_navigation_widget.dart';
 export 'empty_favorites_widget.dart';
 export 'empty_news_widget.dart';
-export 'app_bar_widget.dart';
-export 'loading_widget.dart';
+export 'empty_news_widget.dart';
+export 'empty_search_widget.dart';
 export 'error_widget.dart';
-export 'bottom_navigation_widget.dart';
 export 'headline_widget.dart';
+export 'loading_widget.dart';

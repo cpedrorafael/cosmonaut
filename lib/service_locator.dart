@@ -1,7 +1,3 @@
-import 'package:cosmonaut/features/article/domain/usecases/get_favorites.dart';
-import 'package:cosmonaut/features/article/domain/usecases/save_favorite_article.dart';
-import 'package:cosmonaut/features/article/domain/usecases/search_articles.dart';
-import 'package:cosmonaut/features/article/presentation/bloc/favorites_bloc.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -13,7 +9,11 @@ import 'features/article/data/datasources/article_remote_data_source.dart';
 import 'features/article/data/repositories/article_repository_impl.dart';
 import 'features/article/domain/repositories/article_repository.dart';
 import 'features/article/domain/usecases/get_articles.dart';
+import 'features/article/domain/usecases/get_favorites.dart';
+import 'features/article/domain/usecases/save_favorite_article.dart';
+import 'features/article/domain/usecases/search_articles.dart';
 import 'features/article/presentation/bloc/article_bloc.dart';
+import 'features/article/presentation/bloc/favorites_bloc.dart';
 
 final locator = GetIt.instance;
 

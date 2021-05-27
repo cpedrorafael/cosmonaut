@@ -1,5 +1,6 @@
-import 'package:cosmonaut/core/ui/colors.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/ui/colors.dart';
 
 class CosmoBottomNavigation extends StatefulWidget {
   final Function onItemSelected;

@@ -37,7 +37,7 @@ class FavoritesBloc extends Bloc<ArticleEvent, ArticleState> {
 
       yield* _eitherLoadedOrErrorState(failureOrArticles);
     } else if (event is ToggleFavoriteArticle) {
-      _saveOrRemove(SaveParams(article: event.article));
+      await _saveOrRemove(SaveParams(article: event.article));
 
       yield ToggledFavorite(article: event.article);
     }

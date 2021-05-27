@@ -2,7 +2,6 @@ import 'package:cosmonaut/core/error/failures.dart';
 import 'package:cosmonaut/core/usecases/usecase.dart';
 import 'package:cosmonaut/features/article/domain/entities/article.dart';
 import 'package:cosmonaut/features/article/domain/usecases/get_favorites.dart';
-import 'package:cosmonaut/features/article/domain/usecases/save_favorite_article.dart';
 import 'package:cosmonaut/features/article/presentation/bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';

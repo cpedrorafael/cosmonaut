@@ -1,5 +1,4 @@
 import 'package:cosmonaut/core/usecases/usecase.dart';
-import 'package:cosmonaut/features/article/domain/usecases/get_articles.dart';
 import 'package:cosmonaut/features/article/domain/usecases/get_favorites.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';

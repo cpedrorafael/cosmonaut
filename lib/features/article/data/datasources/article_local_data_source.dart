@@ -1,10 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:meta/meta.dart';
+
 import '../../../../core/error/exceptions.dart';
 import '../models/article_cache.dart';
 import '../models/article_model.dart';
-import 'package:meta/meta.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class ArticleLocalDataSource {
   Future<List<ArticleModel>> getSavedArticles();

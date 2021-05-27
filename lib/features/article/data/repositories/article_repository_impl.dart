@@ -1,4 +1,3 @@
-import 'package:cosmonaut/features/article/data/models/article_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
 
@@ -9,6 +8,7 @@ import '../../domain/entities/article.dart';
 import '../../domain/repositories/article_repository.dart';
 import '../datasources/article_local_data_source.dart';
 import '../datasources/article_remote_data_source.dart';
+import '../models/article_model.dart';
 
 class ArticleRepositoryImpl extends ArticleRepository {
   final ArticleLocalDataSource localDataSource;

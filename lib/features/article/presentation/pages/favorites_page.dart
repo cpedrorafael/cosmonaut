@@ -1,13 +1,14 @@
-import 'package:cosmonaut/core/utils/utils.dart';
-import 'package:cosmonaut/features/article/domain/entities/article.dart';
-import 'package:cosmonaut/features/article/presentation/bloc/article_event.dart';
-import 'package:cosmonaut/features/article/presentation/bloc/bloc.dart';
-import 'package:cosmonaut/features/article/presentation/bloc/favorites_bloc.dart';
-import 'package:cosmonaut/features/article/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/utils/utils.dart';
 import '../../../../service_locator.dart';
+import '../../domain/entities/article.dart';
+import '../bloc/article_event.dart';
+import '../bloc/bloc.dart';
+import '../bloc/favorites_bloc.dart';
+import '../widgets/widgets.dart';
+import 'article_page.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({Key key}) : super(key: key);
@@ -17,6 +18,7 @@ class FavoritesPage extends StatefulWidget {
 
 class _FavoritesPageState extends State<FavoritesPage> {
   var bloc = locator<FavoritesBloc>();
+  List<Article> _articles = [];
 
   @override
   void initState() {
@@ -43,7 +45,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       child: BlocListener(
         cubit: bloc,
         listener: (BuildContext context, state) {
-          if (state is ToggledFavorite) bloc.add(GetFavoritesList());
+          if (state is ToggledFavorite) _articles.remove(state.article);
         },
         child: BlocProvider(
           create: (_) => bloc,
@@ -68,22 +70,28 @@ class _FavoritesPageState extends State<FavoritesPage> {
   }
 
   Widget _getListView(List<Article> articles) {
+    _articles = articles;
     return ClipRRect(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-        child: ListView(
-          children: articles
-              .map(
-                (e) => InkWell(
-                  onTap: () => openArticle(e, context),
-                  child: HeadlineWidget(
-                    article: e,
-                    onToggleFavorite: (article) =>
-                        toggleFavorite(article, bloc),
-                  ),
-                ),
-              )
-              .toList(),
+        child: ListView.builder(
+          itemCount: _articles.length,
+          itemBuilder: (context, index) => InkWell(
+            onTap: () => openArticle(context, index),
+            child: HeadlineWidget(
+              article: _articles[index],
+              onToggleFavorite: (article) => toggleFavorite(article, bloc),
+            ),
+          ),
         ));
+  }
+
+  Future<void> openArticle(BuildContext context, int index) {
+    return Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ArticlePage(
+                  article: _articles[index],
+                ))).then((value) => bloc.add(GetFavoritesList()));
   }
 }
