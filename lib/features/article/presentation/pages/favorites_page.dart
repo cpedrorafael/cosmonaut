@@ -59,7 +59,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       child: BlocListener(
         cubit: bloc,
         listener: (BuildContext context, state) {
-          if (state is ToggledFavorite) _articles.remove(state.article);
+          if (state is ToggledFavorite) _resetBloc();
         },
         child: BlocProvider(
           create: (_) => bloc,
